@@ -57,6 +57,8 @@ class Category:
 
 #Show Spending Chart
 def create_spend_chart(categories):
+  category_length = 0
+  category_list = ""
   chart= ""
   percentages = ""
   spending = []
@@ -75,6 +77,8 @@ def create_spend_chart(categories):
       "spent": spent,
       "percent": 0
     })
+    if len(category.category) > category_length:
+      category_length = len(category.category)
 
   #Find percentages
   for i in range(len(spending)):
@@ -93,9 +97,20 @@ def create_spend_chart(categories):
   equal = "".rjust(4) + "-" * (len(spending) *3 + 1) + "\n"
 
   #Fill out categories - TODO
-
+  for i in range (0, category_length, 1):
+    line = "".rjust(4) 
+    for j in range (len(spending)):
+      if len(spending[j]['category'][i:i+1]) > 0:
+        line += " " + spending[j]['category'][i:i+1]+ " "
+      else:
+        line += " "*3
+    if i + 1 < category_length:
+      line += " \n"
+    else:
+      line += " "
+    category_list += line
 
   #Combine chart components
-  chart = title + percentages + equal
+  chart = title + percentages + equal + category_list
   
   return chart
