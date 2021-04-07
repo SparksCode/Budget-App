@@ -1,17 +1,58 @@
 class Category:
   def __init__(self, category):
+    self.amount = 0
     self.category = category
+    self.ledger = []
 
-  def deposit(self, amount, description=False):
-    return ""
-  def withdraw(self, amount, description=False):
-    return ""
+  def __str__(self):
+    balance_sheet = ""
+    title = "*" * int((30 - len(self.category))/2) + self.category + "*" * int((30 - len(self.category))/2) +"\n"
+    total = "Total:" + '{:,.2f}'.format(self.get_balance()).rjust(7)
+    for transaction in self.ledger:
+      amount = ""
+      description = ""
+      for key,value in transaction.items():
+        if key == 'amount':
+          amount = value
+        elif key == 'description':
+          description = value[:23]
+      
+      balance_sheet += description.ljust(23) + '{:,.2f}'.format(amount).rjust(7) + "\n"
+    return str(title) + balance_sheet + total
+
+  #Deposit Funds
+  def deposit(self, amount, description=""):
+    self.amount += amount
+    self.ledger.append({"amount": amount, "description": description})
+    
+  #Withdraw Funds
+  def withdraw(self, amount, description=""):
+    if self.check_funds(amount):
+      self.amount -= amount
+      self.ledger.append({"amount": -amount, "description": description})
+      return True
+    else:
+      return False
+
+  #Return Balance
   def get_balance(self):
-    return ""
+    return self.amount
+
+  #Transfer Funds  
   def transfer(self, amount, category):
-    return ""
+    if self.check_funds(amount):
+      self.amount -= amount
+      self.ledger.append({"amount": -amount, "description": "Transfer to " + category.category})
+      category.ledger.append({"amount": amount, "description": "Transfer from " + self.category})
+      return True
+    else:
+      return False
+
+  #Check Balance
   def check_funds(self, amount):
-    return ""
+    if self.amount >= amount:
+      return True
+    return False
 
 def create_spend_chart(categories):
-  return "5"
+  return ""
