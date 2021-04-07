@@ -55,5 +55,47 @@ class Category:
       return True
     return False
 
+#Show Spending Chart
 def create_spend_chart(categories):
-  return ""
+  chart= ""
+  percentages = ""
+  spending = []
+  title = "Percentage spent by category\n"
+  total_spent = 0
+
+  #Get spent for each category and Total Spent
+  for category in categories:
+    spent = 0
+    for transaction in category.ledger:
+      if transaction["amount"] < 0:
+        spent -= float(transaction["amount"])
+        total_spent -= spent
+    spending.append({
+      "category": category.category,
+      "spent": spent,
+      "percent": 0
+    })
+
+  #Find percentages
+  for i in range(len(spending)):
+    spending[i]['percent'] =  abs(int((spending[i]['spent'] / total_spent) * 100))
+
+  #Fill out percentages
+  for i in range (100,-1,-10):
+    line = str(i).rjust(3) + "|"
+    for j in range(len(spending)):
+      if spending[j]['percent'] >= i:
+        line += " o "
+      else:
+        line += "".rjust(3)
+    line += " \n"
+    percentages += line
+  equal = "".rjust(4) + "-" * (len(spending) *3 + 1) + "\n"
+
+  #Fill out categories - TODO
+
+
+  #Combine chart components
+  chart = title + percentages + equal
+  
+  return chart
