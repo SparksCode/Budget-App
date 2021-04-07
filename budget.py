@@ -4,20 +4,21 @@ class Category:
     self.category = category
     self.ledger = []
 
+  #Build balance sheet
   def __str__(self):
     balance_sheet = ""
-    title = "*" * int((30 - len(self.category))/2) + self.category + "*" * int((30 - len(self.category))/2) +"\n"
+    title = f"{self.category:*^30}\n"
     total = "Total:" + '{:,.2f}'.format(self.get_balance()).rjust(7)
     for transaction in self.ledger:
       amount = ""
       description = ""
       for key,value in transaction.items():
         if key == 'amount':
-          amount = value
+          amount = '{:,.2f}'.format(value).rjust(7)
         elif key == 'description':
-          description = value[:23]
+          description = value[:23].ljust(23)
       
-      balance_sheet += description.ljust(23) + '{:,.2f}'.format(amount).rjust(7) + "\n"
+      balance_sheet += description + amount + "\n"
     return str(title) + balance_sheet + total
 
   #Deposit Funds
